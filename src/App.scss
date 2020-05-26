@@ -1,0 +1,39 @@
+@import "./variables.scss";
+
+.App-logo {
+  height: 15vmin;
+  pointer-events: none;
+}
+
+.App {
+  background-color: $backgroundColor;
+  min-height: 100vh;
+  color: $primaryColor;
+
+  &-link {
+    color: $secondaryColor;
+  }
+
+  &-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem;
+    cursor: pointer;
+  }
+
+  &-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+  }
+
+  &-footer {
+    position: absolute;
+    bottom: 0;
+    padding: 1rem;
+    font-size: 11px;
+  }
+  
+}
