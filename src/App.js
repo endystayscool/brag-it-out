@@ -11,9 +11,9 @@ function App() {
         <code>out!</code>
       </header>
 
-      <body className="App-body">
+      <div className="App-body">
         <Main />
-      </body>
+      </div>
 
       <footer className="App-footer">
         {/* <code>
