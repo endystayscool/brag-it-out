@@ -30,7 +30,7 @@ function Main() {
 
 
         var loader = new THREE.TextureLoader();
-        loader.load('globe.jpg', function (texture) {
+        loader.load('https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57735/land_ocean_ice_cloud_2048.jpg', function (texture) {
             var geometry = new THREE.SphereGeometry(1, 32, 32);
             var material = new THREE.MeshBasicMaterial({ map: texture, overdraw: 0.5 });
             var earthmesh = new THREE.Mesh(geometry, material);
