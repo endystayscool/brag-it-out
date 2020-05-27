@@ -12,6 +12,13 @@
 
   &-link {
     color: $secondaryColor;
+
+    &-header {
+      display: contents;
+      color: $primaryColor;
+      text-decoration: none;
+      cursor: pointer;
+    }
   }
 
   &-header {
@@ -19,7 +26,6 @@
     flex-direction: column;
     align-items: flex-start;
     padding: 1rem;
-    cursor: pointer;
   }
 
   &-body {

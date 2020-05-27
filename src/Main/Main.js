@@ -7,7 +7,7 @@ function Main() {
     useEffect(() => {
         // initial
         var scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x282c34);
+        scene.background = new THREE.Color(0x000000);
         var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         camera.position.z = 1.5;
         var renderer = new THREE.WebGLRenderer();
@@ -28,21 +28,23 @@ function Main() {
         const globe = new THREE.Group();
         scene.add(globe);
 
-
+        var geometry = new THREE.SphereGeometry(1, 32, 32);
         var loader = new THREE.TextureLoader();
-        loader.load('https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57735/land_ocean_ice_cloud_2048.jpg', function (texture) {
-            var geometry = new THREE.SphereGeometry(1, 32, 32);
-            var material = new THREE.MeshBasicMaterial({ map: texture, overdraw: 0.5 });
-            var earthmesh = new THREE.Mesh(geometry, material);
-            globe.add(earthmesh);
-        });
 
-        camera.position.z = 5;
+        const material = new THREE.MeshBasicMaterial({
+            map: loader.load('https://i.imgur.com/zoqIFOp.jpg')
+        });
+        var earthmesh = new THREE.Mesh(geometry, material);
+        globe.add(earthmesh);
+
+        globe.position.y = .25;
+        globe.rotation.x = .3;
+        camera.position.z = 2;
 
         function animate() {
             renderer.render(scene, camera);
             requestAnimationFrame(animate);
-            globe.rotation.y += 0.01;
+            globe.rotation.y += 0.005;
         }
         animate();
 
