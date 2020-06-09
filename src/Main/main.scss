@@ -16,3 +16,22 @@ canvas { width: 100vw; height: 100vh }
 .text-des {
     color: #232323;
 }
+
+.countries {
+    position: absolute;
+    bottom: 50%;
+    right: 6rem;
+    color: #e2e2e2;
+    font-size: 14px;
+    width: 200px;
+
+    &-list {
+        position: absolute;
+        top: 2rem;
+        display: flex;
+        flex-direction: column;
+        left: 1rem;
+        color: #7e7e7e;
+        font-size: 14px;
+    }
+}

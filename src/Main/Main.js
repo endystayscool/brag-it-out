@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './main.scss';
 import Globe from 'react-globe.gl';
+import Checkbox from '../Checkboxs/Checkbox'
 
 function Main() {
 
@@ -26,6 +27,7 @@ function Main() {
 
     return (
         <div id="container">
+            {/* logo */}
             <a
                 className="info"
                 href="https://www.instagram.com/brag.it.out/"
@@ -37,6 +39,7 @@ function Main() {
                 <code>out!</code>
             </a>
 
+            {/* the world */}
             <Globe
                 ref={globeEl}
                 // backgroundColor="#ffffff"
@@ -50,11 +53,24 @@ function Main() {
                 polygonSideColor={() => 'rgba(200,200,200, 0.5)'}
                 polygonStrokeColor={() => 'rgba(255,255,255, 0.9)'}
                 polygonLabel={({ properties: d }) => `<div class="text-des">
-        <b>${d.ADMIN}</b> <br />
-        <b>Duration of stay:</b> <i>${Math.round(+d.POP_EST / 1e4) / 1e2} d</i></div>
-      `}
+                    <b>${d.ADMIN}</b> <br />
+                    <b>Duration of stay:</b> <i>${Math.round(+d.POP_EST / 1e4) / 1e2} d</i></div>
+                `}
                 polygonsTransitionDuration={transitionDuration}
             />
+
+            {/* detail panel */}
+            <div className="countries">
+                <Checkbox>
+                    ENABLE PATH
+            </Checkbox>
+                <code>Visited:</code>
+                <div className="countries-list">
+                    <code>x Thailand        5d</code>
+                    <code>x Costa Rica      4d</code>
+                </div>
+            </div>
+
         </div>
     )
 }
