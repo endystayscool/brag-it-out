@@ -39,17 +39,19 @@ function Main() {
 
             <Globe
                 ref={globeEl}
+                // backgroundColor="#ffffff"
                 backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
-                // globeImageUrl="//unpkg.com/three-globe/example/img/earth-dark.jpg"
+                globeImageUrl="//unpkg.com/three-globe@2.7.2/example/img/earth-water.png"
                 polygonsData={countries.features}
                 // polygonAltitude={altitude}
-                polygonCapColor={() => 'rgba(9,43,39, 0.9)'}
-                polygonSideColor={() => 'rgba(12,59,53, 0.5)'}
-                // polygonCapColor={() => 'rgba(103,223,209, 0.8)'}
-                // polygonSideColor={() => 'rgba(23,107,97, 0.5)'}
-                polygonLabel={({ properties: d }) => `
+                // polygonCapColor={() => 'rgba(9,43,39, 0.9)'}
+                // polygonSideColor={() => 'rgba(12,59,53, 0.5)'}
+                polygonCapColor={() => 'rgba(103,223,209, 0.9)'}
+                polygonSideColor={() => 'rgba(200,200,200, 0.5)'}
+                polygonStrokeColor={() => 'rgba(255,255,255, 0.9)'}
+                polygonLabel={({ properties: d }) => `<div class="text-des">
         <b>${d.ADMIN}</b> <br />
-        <b>Duration of stay:</b> <i>${Math.round(+d.POP_EST / 1e4) / 1e2} d</i>
+        <b>Duration of stay:</b> <i>${Math.round(+d.POP_EST / 1e4) / 1e2} d</i></div>
       `}
                 polygonsTransitionDuration={transitionDuration}
             />
