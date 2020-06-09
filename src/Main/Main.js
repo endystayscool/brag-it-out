@@ -1,63 +1,28 @@
-import React, { useEffect } from 'react';
-import * as THREE from "three";
+import React, { useEffect, useState, useRef } from 'react';
 import './main.scss';
-
 import Globe from 'react-globe.gl';
 
 function Main() {
-    const N = 300;
-    const gData = [...Array(N).keys()].map(() => ({
-        lat: (Math.random() - 0.5) * 180,
-        lng: (Math.random() - 0.5) * 360,
-        size: Math.random() / 3,
-        color: ['red', 'white', 'blue', 'green'][Math.round(Math.random() * 3)]
-    }));
 
-    //     useEffect(() => {
-    //         // initial
-    //         var scene = new THREE.Scene();
-    //         scene.background = new THREE.Color(0x191919);
-    //         var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    //         camera.position.z = 1.5;
-    //         var renderer = new THREE.WebGLRenderer();
-    //         renderer.setSize(window.innerWidth, window.innerHeight);
+    const globeEl = useRef();
+    const [countries, setCountries] = useState({ features: [] });
+    const [altitude, setAltitude] = useState(0.1);
+    const [transitionDuration, setTransitionDuration] = useState(1000);
 
-    //         // render in container
-    //         var container = document.querySelector('#container');
-    //         document.body.appendChild(renderer.domElement);
-    //         container.appendChild(renderer.domElement);
-
-    //         // create globe
-    //         // var geometry = new THREE.SphereGeometry(1, 32, 32);
-    //         // var material = new THREE.MeshPhongMaterial();
-    //         // var earthmesh = new THREE.Mesh(geometry, material);
-
-    //         // material.map = THREE.ImageUtils.loadTexture({ globe_tx });
-
-    //         const globe = new THREE.Group();
-    //         scene.add(globe);
-
-    //         var geometry = new THREE.SphereGeometry(1, 32, 32);
-    //         var loader = new THREE.TextureLoader();
-
-    //         const material = new THREE.MeshBasicMaterial({
-    //             map: loader.load('https://i.imgur.com/45naBE9.jpg')
-    //         });
-    //         var earthmesh = new THREE.Mesh(geometry, material);
-    //         globe.add(earthmesh);
-
-    //         globe.position.y = .25;
-    //         globe.rotation.x = .3;
-    //         camera.position.z = 2.3;
-
-    //         function animate() {
-    //             renderer.render(scene, camera);
-    //             requestAnimationFrame(animate);
-    //             globe.rotation.y += 0.005;
-    //         }
-    //         animate();
-
-    //     }, [])
+    useEffect(() => {
+        // load data
+        fetch('./ne_110m_admin_0_countries.geojson')
+            .then(res => res.json())
+            .then(countries => {
+                setCountries(countries);
+                // setTimeout(() => {
+                //     setTransitionDuration(4000);
+                //     setAltitude(() => feat => Math.max(0.1, Math.sqrt(+feat.properties.POP_EST) * 7e-5));
+                // }, 3000);
+            }).catch(err => {
+                console.log("Error Reading data " + err);
+            });
+    }, []);
 
     return (
         <div id="container">
@@ -71,12 +36,22 @@ function Main() {
                 <code>it</code>
                 <code>out!</code>
             </a>
+
             <Globe
-                globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
-                // pointsData={gData}
-                pointAltitude="size"
-                pointColor="color"
+                ref={globeEl}
                 backgroundImageUrl="//unpkg.com/three-globe/example/img/night-sky.png"
+                // globeImageUrl="//unpkg.com/three-globe/example/img/earth-dark.jpg"
+                polygonsData={countries.features}
+                // polygonAltitude={altitude}
+                polygonCapColor={() => 'rgba(9,43,39, 0.9)'}
+                polygonSideColor={() => 'rgba(12,59,53, 0.5)'}
+                // polygonCapColor={() => 'rgba(103,223,209, 0.8)'}
+                // polygonSideColor={() => 'rgba(23,107,97, 0.5)'}
+                polygonLabel={({ properties: d }) => `
+        <b>${d.ADMIN}</b> <br />
+        <b>Duration of stay:</b> <i>${Math.round(+d.POP_EST / 1e4) / 1e2} d</i>
+      `}
+                polygonsTransitionDuration={transitionDuration}
             />
         </div>
     )
