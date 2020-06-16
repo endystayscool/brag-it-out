@@ -32,10 +32,10 @@ function Main() {
             .then(res => res.json())
             .then(countries => {
                 setCountries(countries);
-                setTimeout(() => {
-                    setTransitionDuration(4000);
-                    setAltitude(() => feat => Math.max(0.1, Math.sqrt(+feat.properties.POP_EST / 9) * 7e-5));
-                }, 3000);
+                // setTimeout(() => {
+                //     setTransitionDuration(4000);
+                //     setAltitude(() => feat => Math.max(0.1, Math.sqrt(+feat.properties.POP_EST / 9) * 7e-5));
+                // }, 3000);
             }).catch(err => {
                 console.log("Error Reading data " + err);
             });
@@ -88,6 +88,7 @@ function Main() {
             `}
                 polygonsTransitionDuration={transitionDuration}
                 onPolygonClick={({ properties: d }) => {
+                    setAltitude(() => feat => Math.max(0.1, Math.sqrt(+feat.properties.POP_EST / 9) * 7e-5));
                     console.log(d.ADMIN, altitude);
                 }}
 
@@ -96,8 +97,9 @@ function Main() {
                     new THREE.SphereBufferGeometry(d.radius),
                     new THREE.MeshLambertMaterial({ color: d.color })
                 )}
-                customThreeObjectUpdate={(obj, d) => {
-                    Object.assign(obj.position, globeEl.current.getCoords(d.lat, d.lng, d.alt));
+                customThreeObjectUpdate={(obj, d, { properties: data }) => {
+                    Object.assign(altitude, altitude);
+                    // Object.assign(obj.position, globeEl.current.getCoords(d.lat, d.lng, d.alt));
                 }}
             />
             {/* end globe */}
