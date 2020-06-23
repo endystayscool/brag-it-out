@@ -3,17 +3,23 @@ import './main.scss';
 import Globe from 'react-globe.gl';
 import Checkbox from '../Checkboxs/Checkbox';
 import * as THREE from "three";
+import { TorusGeometry } from 'three';
 
 function Main() {
 
-    const globeEl = useRef();
-    const [countries, setCountries] = useState({ features: [] });
-    const [altitude, setAltitude] = useState(0.1);
-    const [transitionDuration, setTransitionDuration] = useState(1000);
-    // let capColor = 'rgba(0,0,0,0)', sideColor = 'rgba(0,0,0,0)', strokeColor = 'rgba(0,0,0,0)';
-    var capColor = 'rgba(103,223,209, 0.9)';
-    var sideColor = 'rgba(200,200,200, 0.5)';
-    var strokeColor = 'rgba(255,255,255, 0.9)';
+    const yearList = [
+        { year: "all", active: false },
+        { year: "2020", active: true },
+        { year: "2019", active: false },
+        { year: "2018", active: false },
+        { year: "2017", active: false },
+        { year: "2016", active: false },
+    ];
+
+    const countriesList = [
+        { name: "Thailand", days: "5d" },
+        { name: "Costa Rica", days: "4d" }
+    ];
 
     const N = 300;
     const randomData = [...Array(N).keys()].map(() => ({
@@ -24,7 +30,23 @@ function Main() {
         color: ['red', 'white', 'blue', 'green'][Math.round(Math.random() * 3)]
     }));
 
+    const globeEl = useRef();
+    const [countries, setCountries] = useState({ features: [] });
+    const [altitude, setAltitude] = useState(0.1);
+    const [scalerank, setScalerank] = useState(1);
+    const [transitionDuration, setTransitionDuration] = useState(1000);
+    const [countriesToggle, setCountriesToggle] = useState({ text: [] });
     const [data, setData] = useState(randomData);
+    const [list, updateList] = useState(countriesList);
+    const [year, updateYear] = useState(yearList);
+    const [disabled, setDisabled] = useState(true);
+    const [countryName, setCountryName] = useState("Country Name");
+    const [inputValue, setInputValue] = useState({ cn: [], dos: [] });
+
+    // let capColor = 'rgba(0,0,0,0)', sideColor = 'rgba(0,0,0,0)', strokeColor = 'rgba(0,0,0,0)';
+    var capColor = 'rgba(103,223,209, 0.9)';
+    var sideColor = 'rgba(200,200,200, 0.5)';
+    var strokeColor = 'rgba(255,255,255, 0.9)';
 
     useEffect(() => {
         // load data
@@ -51,6 +73,43 @@ function Main() {
     useEffect(() => {
         globeEl.current.pointOfView({ altitude: 3.5 });
     }, []);
+
+    const handleRemoveItem = (e) => {
+        const name = e.target.getAttribute("name");
+        if (name == "all") {
+            updateList(list.filter(item => item.name = []));
+        }
+        updateList(list.filter(item => item.name !== name));
+    };
+
+    const handleYearChanged = (e) => {
+        const year = e.target.getAttribute("year");
+
+        updateYear(year.filter(item => {
+            if (item.year == year) {
+                item.active = true;
+            } else {
+                item.active = false;
+            }
+            console.log(item);
+        }));
+
+    };
+
+    const inputPanel = (e) => {
+        setDisabled(true);
+    };
+
+    const handleChange = (e) => {
+        setInputValue(e.target.value);
+    }
+
+    const keyPress = (e) => {
+        if (e.keyCode == 13) {
+            setDisabled(true);
+            console.log(countryName, e.target.value);
+        }
+    }
 
     return (
         <div id="container">
@@ -88,8 +147,10 @@ function Main() {
             `}
                 polygonsTransitionDuration={transitionDuration}
                 onPolygonClick={({ properties: d }) => {
+                    setDisabled(false);
+                    setCountryName(d.ADMIN);
+                    d.scalerank == 1 ? d.scalerank = 0 : d.scalerank = 1;
                     setAltitude(() => feat => Math.max(0.1, Math.sqrt(+feat.properties.POP_EST / 9) * 7e-5));
-                    console.log(d.ADMIN, altitude);
                 }}
 
                 customLayerData={data}
@@ -99,6 +160,7 @@ function Main() {
                 )}
                 customThreeObjectUpdate={(obj, d, { properties: data }) => {
                     Object.assign(altitude, altitude);
+                    // console.log(d.scalerank);
                     // Object.assign(obj.position, globeEl.current.getCoords(d.lat, d.lng, d.alt));
                 }}
             />
@@ -107,27 +169,51 @@ function Main() {
             {/* detail panel */}
             <div className="countries">
                 <Checkbox>
-                    ENABLE PATH
-            </Checkbox>
-                <code>Visited:</code>
+                    <code>ENABLE PATH</code>
+                </Checkbox>
+                <div className="countries-header">
+                    <code>2020 Visited:</code>
+                    <code className="countries-header-reset-button" name="all" onClick={handleRemoveItem}>Reset</code>
+                </div>
                 <div className="countries-list">
-                    <code>x Thailand        5d</code>
-                    <code>x Costa Rica      4d</code>
-                    <code className="countries-list-reset-button">Reset</code>
+                    {list.map(item => {
+                        return (
+                            <>
+                                <code name={item.name} onClick={handleRemoveItem}>x {item.name} {item.days}</code>
+                            </>
+                        );
+                    })}
                 </div>
             </div>
 
             {/* timeline */}
             <div className="timeline">
-                <code className="timeline-padB-active">all</code>
-                <code className="timeline-padB">2020</code>
-                <code className="timeline-padB">2019</code>
-                <code className="timeline-padB">2018</code>
-                <code className="timeline-padB">2017</code>
-                <code className="timeline-padB">2016</code>
+                {year.map(item => {
+                    return (
+                        <>
+                            <code className={item.active ? "timeline-padB-active" : "timeline-padB"} year={item.year} onClick={handleYearChanged}>{item.year}</code>
+                        </>
+                    )
+                })}
             </div>
 
-        </div>
+            {/* Input panel */}
+            {!disabled ?
+                <div className="input-panel">
+                    <code><strong>{countryName}</strong></code>
+                    <code className="input-panel-button" onClick={inputPanel}>x</code>
+                    {/* <code className="input-panel-button" onClick={inputPanel}>✓</code> */}
+                    <br></br><br></br>
+                    {/* <code>Purpose of visit: </code> */}
+                    {/* <input /><br></br> */}
+                    <div className="input">
+                        <code className="input-question">Duration of stay: </code>
+                        <input value={inputValue.dos} onKeyDown={keyPress} onChange={handleChange} className="input-list" placeholder="1d 1m 1y" />
+                    </div>
+                </div> : null
+            }
+
+        </div >
     )
 }
 
