@@ -77,20 +77,23 @@ function Main() {
     const handleRemoveItem = (e) => {
         const name = e.target.getAttribute("name");
         if (name == "all") {
-            updateList(list.filter(item => item.name = []));
+            updateList([]);
+            return;
         }
         updateList(list.filter(item => item.name !== name));
     };
 
     const handleYearChanged = (e) => {
-        const year = e.target.getAttribute("year");
+        const getYear = e.target.getAttribute("year");
 
-        updateYear(year.filter(item => {
-            if (item.year == year) {
+        updateYear(year.map(item => {
+            if (item.year == getYear) {
                 item.active = true;
             } else {
                 item.active = false;
             }
+
+            return item;
             console.log(item);
         }));
 
