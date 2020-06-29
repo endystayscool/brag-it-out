@@ -39,6 +39,7 @@ function Main() {
     const [data, setData] = useState(randomData);
     const [list, updateList] = useState(countriesList);
     const [year, updateYear] = useState(yearList);
+    const [currentYear, getCurrentYear] = useState("2020");
     const [disabled, setDisabled] = useState(true);
     const [countryName, setCountryName] = useState("Country Name");
     const [inputValue, setInputValue] = useState({ cn: [], dos: [] });
@@ -85,6 +86,7 @@ function Main() {
 
     const handleYearChanged = (e) => {
         const getYear = e.target.getAttribute("year");
+        getCurrentYear(getYear);
 
         updateYear(year.map(item => {
             if (item.year === getYear) {
@@ -108,8 +110,11 @@ function Main() {
 
     const keyPress = (e) => {
         if (e.keyCode === 13) {
-            setDisabled(true);
             console.log(countryName, e.target.value);
+            const value = e.target.value;
+            setDisabled(true);
+            updateList(name => [...name, { name: countryName, days: value }]);
+            console.log(list);
         }
     }
 
@@ -177,7 +182,7 @@ function Main() {
                     <code>ENABLE PATH</code>
                 </Checkbox>
                 <div className="countries-header">
-                    <code>2020 Visited:</code>
+                    <code>{currentYear} Visited:</code>
                     <code className="countries-header-reset-button" name="all" onClick={handleRemoveItem}>Reset</code>
                 </div>
                 <div className="countries-list">
