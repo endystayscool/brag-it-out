@@ -76,7 +76,7 @@ function Main() {
 
     const handleRemoveItem = (e) => {
         const name = e.target.getAttribute("name");
-        if (name == "all") {
+        if (name === "all") {
             updateList([]);
             return;
         }
@@ -87,14 +87,13 @@ function Main() {
         const getYear = e.target.getAttribute("year");
 
         updateYear(year.map(item => {
-            if (item.year == getYear) {
+            if (item.year === getYear) {
                 item.active = true;
             } else {
                 item.active = false;
             }
 
             return item;
-            console.log(item);
         }));
 
     };
@@ -108,7 +107,7 @@ function Main() {
     }
 
     const keyPress = (e) => {
-        if (e.keyCode == 13) {
+        if (e.keyCode === 13) {
             setDisabled(true);
             console.log(countryName, e.target.value);
         }
@@ -141,19 +140,22 @@ function Main() {
                 // polygonCapColor={() => 'rgba(103,223,209, 0.9)'}
                 // polygonSideColor={() => 'rgba(200,200,200, 0.5)'}
                 // polygonStrokeColor={() => 'rgba(255,255,255, 0.9)'}
-                polygonLabel={({ properties: d }) => `<div class="text-des">
-                    <b>${d.ADMIN}</b> <br />
-                    <b>Duration of stay:</b> <i>${Math.round(+d.POP_EST / 1e4) / 1e2} d</i></div>
-                `}
-                polygonLabel={({ properties: d }) => `<div class="text-des">
-                <b>${d.ADMIN}</b> <br />
-            `}
+                // polygonLabel={({ properties: d }) => `<div class="text-des">
+                //     <b>${d.ADMIN}</b> <br />
+                //     <b>Duration of stay:</b> <i>${Math.round(+d.POP_EST / 1e4) / 1e2} d</i></div>
+                // `}
+                polygonLabel={({ properties: d }) => {
+                    if (disabled) {
+                        return `<div class="text-des">
+                    <code>${d.ADMIN}</code> <br />`
+                    }
+                }}
                 polygonsTransitionDuration={transitionDuration}
                 onPolygonClick={({ properties: d }) => {
                     setDisabled(false);
                     setCountryName(d.ADMIN);
-                    d.scalerank == 1 ? d.scalerank = 0 : d.scalerank = 1;
-                    setAltitude(() => feat => Math.max(0.1, Math.sqrt(+feat.properties.POP_EST / 9) * 7e-5));
+                    // d.scalerank === 1 ? d.scalerank = 0 : d.scalerank = 1;
+                    // setAltitude(() => feat => Math.max(0.1, Math.sqrt(+feat.properties.POP_EST / 9) * 7e-5));
                 }}
 
                 customLayerData={data}
