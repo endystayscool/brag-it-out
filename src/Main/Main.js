@@ -16,10 +16,7 @@ function Main() {
         { year: "2016", active: false },
     ];
 
-    const countriesList = [
-        { name: "Thailand", days: "5d" },
-        { name: "Costa Rica", days: "4d" }
-    ];
+    const countriesList = [];
 
     const N = 300;
     const randomData = [...Array(N).keys()].map(() => ({
@@ -70,6 +67,7 @@ function Main() {
             requestAnimationFrame(moveSpheres);
         })();
 
+        updateList(JSON.parse(localStorage.getItem('visited')));
     }, []);
 
     useEffect(() => {
@@ -83,6 +81,7 @@ function Main() {
             return;
         }
         updateList(list.filter(item => item.name !== name));
+        localStorage.setItem('visited', JSON.stringify(list));
     };
 
     const handleYearChanged = (e) => {
@@ -108,6 +107,7 @@ function Main() {
     const errorPopup = (e) => {
         setErrorDisabled(true);
         updateList([]);
+        localStorage.setItem('visited', JSON.stringify(list));
     };
 
     const errorPopupCancel = (e) => {
@@ -120,10 +120,10 @@ function Main() {
 
     const keyPress = (e) => {
         if (e.keyCode === 13) {
-            console.log(countryName, e.target.value);
             const value = e.target.value;
             setDisabled(true);
             updateList(name => [...name, { name: countryName, days: value }]);
+            localStorage.setItem('visited', JSON.stringify(list));
             console.log(list);
         }
     }
