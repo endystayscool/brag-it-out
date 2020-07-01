@@ -41,6 +41,7 @@ function Main() {
     const [year, updateYear] = useState(yearList);
     const [currentYear, getCurrentYear] = useState("2020");
     const [disabled, setDisabled] = useState(true);
+    const [errorDisabled, setErrorDisabled] = useState(true);
     const [countryName, setCountryName] = useState("Country Name");
     const [inputValue, setInputValue] = useState({ cn: [], dos: [] });
 
@@ -78,7 +79,7 @@ function Main() {
     const handleRemoveItem = (e) => {
         const name = e.target.getAttribute("name");
         if (name === "all") {
-            updateList([]);
+            setErrorDisabled(false);
             return;
         }
         updateList(list.filter(item => item.name !== name));
@@ -102,6 +103,15 @@ function Main() {
 
     const inputPanel = (e) => {
         setDisabled(true);
+    };
+
+    const errorPopup = (e) => {
+        setErrorDisabled(true);
+        updateList([]);
+    };
+
+    const errorPopupCancel = (e) => {
+        setErrorDisabled(true);
     };
 
     const handleChange = (e) => {
@@ -219,6 +229,18 @@ function Main() {
                     <div className="input">
                         <code className="input-question">Duration of stay: </code>
                         <input value={inputValue.dos} onKeyDown={keyPress} onChange={handleChange} className="input-list" placeholder="1d 1m 1y" />
+                    </div>
+                </div> : null
+            }
+
+            {/* error popup */}
+            {!errorDisabled ?
+                <div className="error-popup">
+                    <code><strong>Reset {currentYear}</strong></code>
+                    <code className="error-popup-button" onClick={errorPopup}>Reset</code>
+                    <code className="error-popup-button-cancel" onClick={errorPopupCancel}>Cancel</code>
+                    <div className="error">
+                        <code className="error-question">This action cannot be undone. <br></br> Do you really want to reset {currentYear} ?</code>
                     </div>
                 </div> : null
             }
