@@ -13,6 +13,33 @@ canvas { width: 100vw; height: 100vh }
     text-decoration: none;
 }
 
+.shop {
+    position: absolute;
+    z-index: 100;
+    right: 10px;
+    bottom: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #ffffff;
+}
+.shop:hover {
+    opacity: .8;
+    margin-bottom: 4px;
+}
+
+.sharethis-inline-share-buttons {
+    position: absolute;
+    right: 25px;
+    bottom: 3px;
+}
+#st-1 .st-btn[data-network='sharethis'] {
+    background-color: #000 !important;
+}
+#st-1 .st-btn[data-network='facebook'] {
+    display: none;
+}
+
+
 .text-des {
     color: #232323;
 }

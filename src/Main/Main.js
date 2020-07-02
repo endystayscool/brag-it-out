@@ -4,6 +4,8 @@ import Globe from 'react-globe.gl';
 import Checkbox from '../Checkboxs/Checkbox';
 import * as THREE from "three";
 import { TorusGeometry } from 'three';
+import Shop from '../Shop/Shop';
+import { useHistory } from 'react-router-dom';
 
 function Main() {
 
@@ -28,6 +30,7 @@ function Main() {
     }));
 
     const globeEl = useRef();
+    const history = useHistory();
     const [countries, setCountries] = useState({ features: [] });
     const [altitude, setAltitude] = useState(0.1);
     const [scalerank, setScalerank] = useState(1);
@@ -142,6 +145,12 @@ function Main() {
                 <code>out!</code>
             </a>
 
+            {/* shop */}
+            <div className="sharethis-inline-share-buttons"></div>
+            <a>
+                <i className='fas shop' onClick={() => history.push('/shop')}>&#xf291;</i>
+            </a>
+
             {/* the world */}
             <Globe
                 ref={globeEl}
@@ -170,7 +179,7 @@ function Main() {
                     setDisabled(false);
                     setCountryName(d.ADMIN);
                     // d.scalerank === 1 ? d.scalerank = 0 : d.scalerank = 1;
-                    // setAltitude(() => feat => Math.max(0.1, Math.sqrt(+feat.properties.POP_EST / 9) * 7e-5));
+                    setAltitude(() => feat => Math.max(0.1, Math.sqrt(+feat.properties.POP_EST / 9) * 7e-5));
                 }}
 
                 customLayerData={data}
@@ -246,7 +255,9 @@ function Main() {
             }
 
         </div >
+
     )
 }
 
 export default Main;
+
