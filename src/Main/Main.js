@@ -3,8 +3,8 @@ import './main.scss';
 import Globe from 'react-globe.gl';
 import Checkbox from '../Checkboxs/Checkbox';
 import * as THREE from "three";
-import { TorusGeometry } from 'three';
-import Shop from '../Shop/Shop';
+// import { TorusGeometry } from 'three';
+// import Shop from '../Shop/Shop';
 import { useHistory } from 'react-router-dom';
 
 function Main() {
@@ -33,9 +33,9 @@ function Main() {
     const history = useHistory();
     const [countries, setCountries] = useState({ features: [] });
     const [altitude, setAltitude] = useState(0.1);
-    const [scalerank, setScalerank] = useState(1);
+    // const [scalerank, setScalerank] = useState(1);
     const [transitionDuration, setTransitionDuration] = useState(1000);
-    const [countriesToggle, setCountriesToggle] = useState({ text: [] });
+    // const [countriesToggle, setCountriesToggle] = useState({ text: [] });
     const [data, setData] = useState(randomData);
     const [list, updateList] = useState(countriesList);
     const [year, updateYear] = useState(yearList);

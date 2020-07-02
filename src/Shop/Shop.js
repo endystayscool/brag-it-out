@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import './shop.scss';
 import tWhite from './tshirt-white.png';
 import sizeSelect from './size.png';
@@ -9,23 +9,21 @@ function Shop() {
 
     return (
         <div className="test">
-            <a
+            <div
                 className="info-shop"
                 onClick={() => history.push('/main')}
-                target="_blank"
-                rel="noopener noreferrer"
             >
                 <code>Brag</code>
                 <code>it</code>
                 <code>out!</code>
-            </a>
+            </div>
 
             <div className="products">
-                <img src={tWhite} />
+                <img alt="" src={tWhite} />
                 <code className="title">T-shirt</code>
                 <code className="price">€20</code>
                 <p className="title">_____________________________</p>
-                <img className="size" src={sizeSelect} />
+                <img alt="" className="size" src={sizeSelect} />
                 <code className="des">
                     Product code: UJN657_1WO4_F0009_S_201 <br />
                     <br />
