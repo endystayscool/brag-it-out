@@ -70,12 +70,18 @@ function Main() {
             requestAnimationFrame(moveSpheres);
         })();
 
-        updateList(JSON.parse(localStorage.getItem('visited')));
+        const storageItem = JSON.parse(localStorage.getItem('visited'));
+        storageItem && updateList(storageItem);
     }, []);
 
     useEffect(() => {
         globeEl.current.pointOfView({ altitude: 3.5 });
     }, []);
+
+    useEffect(() => {
+        console.log(list);
+        localStorage.setItem('visited', JSON.stringify(list));
+    }, [list])
 
     const handleRemoveItem = (e) => {
         const name = e.target.getAttribute("name");
@@ -84,7 +90,6 @@ function Main() {
             return;
         }
         updateList(list.filter(item => item.name !== name));
-        localStorage.setItem('visited', JSON.stringify(list));
     };
 
     const handleYearChanged = (e) => {
@@ -110,7 +115,6 @@ function Main() {
     const errorPopup = (e) => {
         setErrorDisabled(true);
         updateList([]);
-        localStorage.setItem('visited', JSON.stringify(list));
     };
 
     const errorPopupCancel = (e) => {
@@ -125,9 +129,10 @@ function Main() {
         if (e.keyCode === 13) {
             const value = e.target.value;
             setDisabled(true);
-            updateList(name => [...name, { name: countryName, days: value }]);
-            localStorage.setItem('visited', JSON.stringify(list));
-            console.log(list);
+            updateList(name => {
+                console.log('why', name);
+                return [...name, { name: countryName, days: value }]
+            });
         }
     }
 

@@ -16,8 +16,8 @@ canvas { width: 100vw; height: 100vh }
 .shop {
     position: absolute;
     z-index: 100;
-    right: 10px;
-    bottom: 10px;
+    left: 19px;
+    bottom: 4rem;
     cursor: pointer;
     font-size: 16px;
     color: #ffffff;
@@ -29,8 +29,8 @@ canvas { width: 100vw; height: 100vh }
 
 .sharethis-inline-share-buttons {
     position: absolute;
-    right: 25px;
-    bottom: 3px;
+    left: 10px;
+    bottom: 10px;
 }
 #st-1 .st-btn[data-network='sharethis'] {
     background-color: #000 !important;
