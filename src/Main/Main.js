@@ -205,13 +205,13 @@ function Main() {
                     <code className="countries-header-reset-button" name="all" onClick={handleRemoveItem}>Reset</code>
                 </div>
                 <div className="countries-list">
-                    {list.map(item => {
+                    {list ? list.map(item => {
                         return (
                             <>
                                 <code name={item.name} onClick={handleRemoveItem}>x {item.name} {item.days}</code>
                             </>
                         );
-                    })}
+                    }) : null}
                 </div>
             </div>
 
