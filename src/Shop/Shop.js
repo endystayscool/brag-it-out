@@ -31,7 +31,7 @@ function Shop() {
                     - Ribbed knit crew neck<br />
                     - Twin-needle stitching on the hem and sleeves<br />
                     - Patch pocket<br />
-                    - Prada Oval logo on the chest<br />
+                    - Your custom map on the chest<br />
                     - 92% cotton, 8% elastane<br />
                     <br />
                     66 cm Height<br />

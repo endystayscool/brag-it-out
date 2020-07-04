@@ -131,7 +131,7 @@ function Main() {
             setDisabled(true);
             updateList(name => {
                 console.log('why', name);
-                return [...name, { name: countryName, days: value }]
+                return [...name, { name: countryName, days: value, year: currentYear }];
             });
         }
     }
@@ -183,8 +183,10 @@ function Main() {
                 onPolygonClick={({ properties: d }) => {
                     setDisabled(false);
                     setCountryName(d.ADMIN);
+                    console.log(d);
+
                     // d.scalerank === 1 ? d.scalerank = 0 : d.scalerank = 1;
-                    setAltitude(() => feat => Math.max(0.1, Math.sqrt(+feat.properties.POP_EST / 9) * 7e-5));
+                    setAltitude(() => feat => Math.max(0.1, Math.sqrt(+feat.properties.POP_EST / 29) * 7e-5));
                 }}
 
                 customLayerData={data}
@@ -210,13 +212,14 @@ function Main() {
                     <code className="countries-header-reset-button" name="all" onClick={handleRemoveItem}>Reset</code>
                 </div>
                 <div className="countries-list">
-                    {list ? list.map(item => {
-                        return (
-                            <>
-                                <code name={item.name} onClick={handleRemoveItem}>x {item.name} {item.days}</code>
-                            </>
-                        );
-                    }) : null}
+                    {list ? list.filter(res => res.year === currentYear)
+                        .map(item => {
+                            return (
+                                <>
+                                    <code name={item.name} onClick={handleRemoveItem}>x {item.name} {item.days}</code>
+                                </>
+                            );
+                        }) : null}
                 </div>
             </div>
 
