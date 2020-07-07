@@ -20,23 +20,13 @@ function Main() {
 
     const countriesList = [];
 
-    const N = 300;
-    const randomData = [...Array(N).keys()].map(() => ({
-        lat: (Math.random() - 0.5) * 180,
-        lng: (Math.random() - 0.5) * 360,
-        alt: Math.random() * 0.8 + 0.1,
-        radius: Math.random() * 5,
-        color: ['red', 'white', 'blue', 'green'][Math.round(Math.random() * 3)]
-    }));
-
     const globeEl = useRef();
     const history = useHistory();
     const [countries, setCountries] = useState({ features: [] });
-    const [altitude, setAltitude] = useState(0.1);
+    const [altitude, setAltitude] = useState(0.01);
     // const [scalerank, setScalerank] = useState(1);
     const [transitionDuration, setTransitionDuration] = useState(1000);
     // const [countriesToggle, setCountriesToggle] = useState({ text: [] });
-    const [data, setData] = useState(randomData);
     const [list, updateList] = useState(countriesList);
     const [year, updateYear] = useState(yearList);
     const [currentYear, getCurrentYear] = useState("2020");
@@ -44,9 +34,12 @@ function Main() {
     const [errorDisabled, setErrorDisabled] = useState(true);
     const [countryName, setCountryName] = useState("Country Name");
     const [inputValue, setInputValue] = useState({ cn: [], dos: [] });
+    const [capColor, setCapColor] = useState('rgba(0,0,0,0)');
+    const [arcsData, setArcsData] = useState();
+    const [isEnablePath, setEnablePath] = useState(false);
 
     // let capColor = 'rgba(0,0,0,0)', sideColor = 'rgba(0,0,0,0)', strokeColor = 'rgba(0,0,0,0)';
-    var capColor = 'rgba(103,223,209, 0.9)';
+    // var capColor = 'rgba(103,223,209, 0.9)';
     var sideColor = 'rgba(200,200,200, 0.5)';
     var strokeColor = 'rgba(255,255,255, 0.9)';
 
@@ -56,27 +49,34 @@ function Main() {
             .then(res => res.json())
             .then(countries => {
                 setCountries(countries);
-                // setTimeout(() => {
-                //     setTransitionDuration(4000);
-                //     setAltitude(() => feat => Math.max(0.1, Math.sqrt(+feat.properties.POP_EST / 9) * 7e-5));
-                // }, 3000);
+                setAltitude(() => feat => {
+                    const persistedList = JSON.parse(localStorage.getItem('visited'));
+                    if (!persistedList.map(list =>
+                        // {
+                        list.name
+                        // if (list.days <= 10) {
+                        //     return 0.2;
+                        // } else if (list.days > 10 && list.days <= 20) {
+                        //     return 0.4;
+                        // } else if (list.days > 20 && list.days <= 30) {
+                        //     return 0.6;
+                        // } else {
+                        //     return 1;
+                        // }
+                        // }
+                    ).includes(feat.properties.ADMIN)) {
+                        return 0.01;
+                    }
+                    return 0.4;
+                });
             }).catch(err => {
                 console.log("Error Reading data " + err);
             });
-
-        (function moveSpheres() {
-            data.forEach(d => d.lat += 0.2);
-            setData(data.slice());
-            requestAnimationFrame(moveSpheres);
-        })();
 
         const storageItem = JSON.parse(localStorage.getItem('visited'));
         storageItem && updateList(storageItem);
     }, []);
 
-    useEffect(() => {
-        globeEl.current.pointOfView({ altitude: 3.5 });
-    }, []);
 
     useEffect(() => {
         console.log(list);
@@ -130,9 +130,24 @@ function Main() {
             const value = e.target.value;
             setDisabled(true);
             updateList(name => {
-                console.log('why', name);
-                return [...name, { name: countryName, days: value, year: currentYear }];
+                return [...name, { name: countryName, days: parseInt(value), year: currentYear }];
             });
+        }
+    }
+
+    const enablePath = (e) => {
+        if (!isEnablePath) {
+            setArcsData([...Array(list.length).keys()].map(() => ({
+                startLat: (Math.random() - 0.5) * 180,
+                startLng: (Math.random() - 0.5) * 360,
+                endLat: (Math.random() - 0.5) * 180,
+                endLng: (Math.random() - 0.5) * 360,
+                color: 'rgba(255,255,255,0.5)'
+            })));
+            setEnablePath(true);
+        } else {
+            setArcsData([]);
+            setEnablePath(false);
         }
     }
 
@@ -163,16 +178,16 @@ function Main() {
                 globeImageUrl="//unpkg.com/three-globe@2.7.2/example/img/earth-water.png"
                 polygonsData={countries.features}
                 polygonAltitude={altitude}
-                polygonCapColor={() => capColor}
+                polygonCapColor={(feat) => {
+                    const persistedList = JSON.parse(localStorage.getItem('visited'));
+                    if (!persistedList.map(list => list.name)
+                        .includes(feat.properties.ADMIN)) {
+                        return 'rgba(0,0,0, 0)';
+                    }
+                    return 'rgba(103,223,209, 0.9)';
+                }}
                 polygonSideColor={() => sideColor}
                 polygonStrokeColor={() => strokeColor}
-                // polygonCapColor={() => 'rgba(103,223,209, 0.9)'}
-                // polygonSideColor={() => 'rgba(200,200,200, 0.5)'}
-                // polygonStrokeColor={() => 'rgba(255,255,255, 0.9)'}
-                // polygonLabel={({ properties: d }) => `<div class="text-des">
-                //     <b>${d.ADMIN}</b> <br />
-                //     <b>Duration of stay:</b> <i>${Math.round(+d.POP_EST / 1e4) / 1e2} d</i></div>
-                // `}
                 polygonLabel={({ properties: d }) => {
                     if (disabled) {
                         return `<div class="text-des">
@@ -183,29 +198,20 @@ function Main() {
                 onPolygonClick={({ properties: d }) => {
                     setDisabled(false);
                     setCountryName(d.ADMIN);
-                    console.log(d);
-
-                    // d.scalerank === 1 ? d.scalerank = 0 : d.scalerank = 1;
-                    setAltitude(() => feat => Math.max(0.1, Math.sqrt(+feat.properties.POP_EST / 29) * 7e-5));
                 }}
 
-                customLayerData={data}
-                customThreeObject={d => new THREE.Mesh(
-                    new THREE.SphereBufferGeometry(d.radius),
-                    new THREE.MeshLambertMaterial({ color: d.color })
-                )}
-                customThreeObjectUpdate={(obj, d, { properties: data }) => {
-                    Object.assign(altitude, altitude);
-                    // console.log(d.scalerank);
-                    // Object.assign(obj.position, globeEl.current.getCoords(d.lat, d.lng, d.alt));
-                }}
+                arcsData={arcsData}
+                arcColor={'color'}
+                arcDashLength={() => Math.random()}
+                arcDashGap={() => Math.random()}
+                arcDashAnimateTime={() => Math.random() * 4000 + 500}
             />
             {/* end globe */}
 
             {/* detail panel */}
             <div className="countries">
-                <Checkbox>
-                    <code>ENABLE PATH</code>
+                <Checkbox >
+                    <code onClick={enablePath}>ENABLE PATH</code>
                 </Checkbox>
                 <div className="countries-header">
                     <code>{currentYear} Visited:</code>
@@ -216,7 +222,7 @@ function Main() {
                         .map(item => {
                             return (
                                 <>
-                                    <code name={item.name} onClick={handleRemoveItem}>x {item.name} {item.days}</code>
+                                    <code name={item.name} onClick={handleRemoveItem}>x {item.name} {item.days} days</code>
                                 </>
                             );
                         }) : null}
@@ -245,7 +251,7 @@ function Main() {
                     {/* <input /><br></br> */}
                     <div className="input">
                         <code className="input-question">Duration of stay: </code>
-                        <input value={inputValue.dos} onKeyDown={keyPress} onChange={handleChange} className="input-list" placeholder="1d 1m 1y" />
+                        <input value={inputValue.dos} onKeyDown={keyPress} onChange={handleChange} className="input-list" placeholder="   days" />
                     </div>
                 </div> : null
             }

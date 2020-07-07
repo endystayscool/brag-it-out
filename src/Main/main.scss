@@ -41,7 +41,8 @@ canvas { width: 100vw; height: 100vh }
 
 
 .text-des {
-    color: #232323;
+    color: &secondaryColor;
+    background-color: #7e7e7e;
 }
 
 .countries {
