@@ -3,8 +3,6 @@ import './main.scss';
 import Globe from 'react-globe.gl';
 import Checkbox from '../Checkboxs/Checkbox';
 import * as THREE from "three";
-// import { TorusGeometry } from 'three';
-// import Shop from '../Shop/Shop';
 import { useHistory } from 'react-router-dom';
 
 function Main() {
@@ -24,9 +22,7 @@ function Main() {
     const history = useHistory();
     const [countries, setCountries] = useState({ features: [] });
     const [altitude, setAltitude] = useState(0.01);
-    // const [scalerank, setScalerank] = useState(1);
     const [transitionDuration, setTransitionDuration] = useState(1000);
-    // const [countriesToggle, setCountriesToggle] = useState({ text: [] });
     const [list, updateList] = useState(countriesList);
     const [year, updateYear] = useState(yearList);
     const [currentYear, getCurrentYear] = useState("2020");
@@ -76,7 +72,6 @@ function Main() {
         const storageItem = JSON.parse(localStorage.getItem('visited'));
         storageItem && updateList(storageItem);
     }, []);
-
 
     useEffect(() => {
         console.log(list);
@@ -202,9 +197,6 @@ function Main() {
 
                 arcsData={arcsData}
                 arcColor={'color'}
-                arcDashLength={() => Math.random()}
-                arcDashGap={() => Math.random()}
-                arcDashAnimateTime={() => Math.random() * 4000 + 500}
             />
             {/* end globe */}
 
