@@ -47,23 +47,21 @@ function Main() {
                 setCountries(countries);
                 setAltitude(() => feat => {
                     const persistedList = JSON.parse(localStorage.getItem('visited'));
-                    if (!persistedList.map(list =>
-                        // {
-                        list.name
-                        // if (list.days <= 10) {
-                        //     return 0.2;
-                        // } else if (list.days > 10 && list.days <= 20) {
-                        //     return 0.4;
-                        // } else if (list.days > 20 && list.days <= 30) {
-                        //     return 0.6;
-                        // } else {
-                        //     return 1;
-                        // }
-                        // }
-                    ).includes(feat.properties.ADMIN)) {
+                    const persistedListName = persistedList.map(list => list.name);
+                    const renderedCountry = persistedList.find(list => list.name === feat.properties.ADMIN);
+                    if (!renderedCountry) { return 0.01; }
+                    if (!persistedListName.includes(feat.properties.ADMIN) || renderedCountry.year !== currentYear) {
                         return 0.01;
                     }
-                    return 0.4;
+                    if (renderedCountry.days <= 10) {
+                        return 0.2;
+                    } else if (renderedCountry.days > 10 && renderedCountry.days <= 20) {
+                        return 0.3;
+                    } else if (renderedCountry.days > 20 && renderedCountry.days <= 30) {
+                        return 0.4;
+                    } else {
+                        return 0.5;
+                    }
                 });
             }).catch(err => {
                 console.log("Error Reading data " + err);
@@ -90,6 +88,36 @@ function Main() {
     const handleYearChanged = (e) => {
         const getYear = e.target.getAttribute("year");
         getCurrentYear(getYear);
+
+        setAltitude(() => feat => {
+            const persistedList = JSON.parse(localStorage.getItem('visited'));
+            const persistedListName = persistedList.map(list => list.name);
+            const renderedCountry = persistedList.find(list => list.name === feat.properties.ADMIN);
+            if (!renderedCountry) { return 0.01; }
+            if (getYear === 'all' && persistedListName.includes(feat.properties.ADMIN)) {
+                if (renderedCountry.days <= 10) {
+                    return 0.2;
+                } else if (renderedCountry.days > 10 && renderedCountry.days <= 20) {
+                    return 0.3;
+                } else if (renderedCountry.days > 20 && renderedCountry.days <= 30) {
+                    return 0.4;
+                } else {
+                    return 0.5;
+                }
+            }
+            if (!persistedListName.includes(feat.properties.ADMIN) || renderedCountry.year !== getYear) {
+                return 0.01;
+            }
+            if (renderedCountry.days <= 10) {
+                return 0.2;
+            } else if (renderedCountry.days > 10 && renderedCountry.days <= 20) {
+                return 0.3;
+            } else if (renderedCountry.days > 20 && renderedCountry.days <= 30) {
+                return 0.4;
+            } else {
+                return 0.5;
+            }
+        });
 
         updateYear(year.map(item => {
             if (item.year === getYear) {
@@ -137,6 +165,8 @@ function Main() {
                 startLng: (Math.random() - 0.5) * 360,
                 endLat: (Math.random() - 0.5) * 180,
                 endLng: (Math.random() - 0.5) * 360,
+                from: list[0].name,
+                to: list[1].name,
                 color: 'rgba(255,255,255,0.5)'
             })));
             setEnablePath(true);
@@ -144,6 +174,22 @@ function Main() {
             setArcsData([]);
             setEnablePath(false);
         }
+    }
+
+    function renderCountryList() {
+        if (list.length === 0) return null
+        if (currentYear === 'all') return list.map(item => <>
+            <code name={item.name} onClick={handleRemoveItem}>x {item.name} {item.days} days</code>
+        </>);
+
+        return list.filter(res => res.year === currentYear)
+            .map(item => {
+                return (
+                    <>
+                        <code name={item.name} onClick={handleRemoveItem}>x {item.name} {item.days} days</code>
+                    </>
+                );
+            });
     }
 
     return (
@@ -175,8 +221,13 @@ function Main() {
                 polygonAltitude={altitude}
                 polygonCapColor={(feat) => {
                     const persistedList = JSON.parse(localStorage.getItem('visited'));
-                    if (!persistedList.map(list => list.name)
-                        .includes(feat.properties.ADMIN)) {
+                    const persistedListName = persistedList.map(list => list.name);
+                    const renderedCountry = persistedList.find(list => list.name === feat.properties.ADMIN);
+                    if (!renderedCountry) { return 0.01; }
+                    if (currentYear === 'all' && persistedListName.includes(feat.properties.ADMIN)) {
+                        return 'rgba(103,223,209, 0.9)';
+                    }
+                    if (!persistedListName.includes(feat.properties.ADMIN) || renderedCountry.year !== currentYear) {
                         return 'rgba(0,0,0, 0)';
                     }
                     return 'rgba(103,223,209, 0.9)';
@@ -197,6 +248,9 @@ function Main() {
 
                 arcsData={arcsData}
                 arcColor={'color'}
+                arcLabel={d => {
+                    return `${d.from} &#8594; ${d.to}`;
+                }}
             />
             {/* end globe */}
 
@@ -210,14 +264,7 @@ function Main() {
                     <code className="countries-header-reset-button" name="all" onClick={handleRemoveItem}>Reset</code>
                 </div>
                 <div className="countries-list">
-                    {list ? list.filter(res => res.year === currentYear)
-                        .map(item => {
-                            return (
-                                <>
-                                    <code name={item.name} onClick={handleRemoveItem}>x {item.name} {item.days} days</code>
-                                </>
-                            );
-                        }) : null}
+                    {renderCountryList()}
                 </div>
             </div>
 
