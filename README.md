@@ -1,3 +1,8 @@
+## Not A Complete Project
+
+need to enhance responsively and test with cross-platform browser
+as well as fixing minor library issues
+
 ## Available Scripts
 
 In the project directory, you can run:
