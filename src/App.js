@@ -20,6 +20,9 @@ function App() {
           <Route path="/shop">
             <Shop />
           </Route>
+          <Route path="/">
+            <Main />
+          </Route>
         </Switch>
       </Router >
     </div >
