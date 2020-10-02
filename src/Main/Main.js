@@ -293,7 +293,7 @@ function Main() {
                     {/* <input /><br></br> */}
                     <div className="input">
                         <code className="input-question">Duration of stay: </code>
-                        <input value={inputValue.dos} onKeyDown={keyPress} onChange={handleChange} className="input-list" placeholder="   days" />
+                        <input autoFocus value={inputValue.dos} onKeyDown={keyPress} onChange={handleChange} className="input-list" placeholder="   days" />
                     </div>
                 </div> : null
             }
