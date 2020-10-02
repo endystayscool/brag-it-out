@@ -162,6 +162,16 @@ canvas { width: 100vw; height: 100vh }
     }
 }
 
+.close-country{
+    padding: 0 4px;
+}
+.close-country:hover {
+    color: #fff;
+    background: #cf4c4c;
+    border-radius: 50%;
+    border-color: 7e7e7e;
+}
+
 .error-popup {
     top: 1rem;
     right: 1rem;

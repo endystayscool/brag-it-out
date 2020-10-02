@@ -77,6 +77,7 @@ function Main() {
     }, [list])
 
     const handleRemoveItem = (e) => {
+        console.log(3333);
         const name = e.target.getAttribute("name");
         if (name === "all") {
             setErrorDisabled(false);
@@ -185,9 +186,10 @@ function Main() {
         return list.filter(res => res.year === currentYear)
             .map(item => {
                 return (
-                    <>
-                        <code name={item.name} onClick={handleRemoveItem}>x {item.name} {item.days} days</code>
-                    </>
+                    <div>
+                        <code name={item.name} onClick={handleRemoveItem} className="close-country">x</code>
+                        <code> {item.name} {item.days} days</code>
+                    </div>
                 );
             });
     }
@@ -260,7 +262,7 @@ function Main() {
                     <code onClick={enablePath}>ENABLE PATH</code>
                 </Checkbox>
                 <div className="countries-header">
-                    <code>{currentYear} Visited:</code>
+                    <code>In {currentYear} I Visited:</code>
                     <code className="countries-header-reset-button" name="all" onClick={handleRemoveItem}>Reset</code>
                 </div>
                 <div className="countries-list">
