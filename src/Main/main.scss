@@ -2,6 +2,10 @@
 
 canvas { width: 100vw; height: 100vh }
 
+#container {
+  position: fixed;
+}
+
 .info {
     position: absolute;
     color: $primaryColor;
@@ -25,6 +29,12 @@ canvas { width: 100vw; height: 100vh }
 .shop:hover {
     opacity: .8;
     margin-bottom: 4px;
+}
+
+.sub-menu {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
 }
 
 .sharethis-inline-share-buttons {

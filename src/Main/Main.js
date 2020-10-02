@@ -207,10 +207,10 @@ function Main() {
             </a>
 
             {/* shop */}
-            <div className="sharethis-inline-share-buttons"></div>
-            <a>
-                <i className='fas shop' onClick={() => history.push('/shop')}>&#xf291;</i>
-            </a>
+            {/* <div className="sub-menu"> */}
+            {/* <div className="sharethis-inline-share-buttons"></div> */}
+            {/* <a><i className='fas shop' onClick={() => history.push('/shop')}>&#xf291;</i></a> */}
+            {/* </div> */}
 
             {/* the world */}
             <Globe
