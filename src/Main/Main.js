@@ -258,9 +258,10 @@ function Main() {
 
             {/* detail panel */}
             <div className="countries">
+                {/* in developement
                 <Checkbox >
                     <code onClick={enablePath}>ENABLE PATH</code>
-                </Checkbox>
+                </Checkbox> */}
                 <div className="countries-header">
                     <code>In {currentYear} I Visited:</code>
                     <code className="countries-header-reset-button" name="all" onClick={handleRemoveItem}>Reset</code>
